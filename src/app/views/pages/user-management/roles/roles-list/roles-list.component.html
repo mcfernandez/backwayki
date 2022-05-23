@@ -1,0 +1,33 @@
+<kt-portlet>
+    <kt-portlet-header [title]="'Roles'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="mat-table__wrapper">
+            <mat-table class="lmat-elevation-z8" #table [dataSource]="dataSource" matSort #sort1="matSort" matSortActive="id" matSortDirection="asc" matSortDisableClear>
+                <ng-container matColumnDef="nombre">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
+                    <mat-cell *matCellDef="let role">{{ role.name }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                    <mat-cell *matCellDef="let role">{{ role.description }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="estado">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+                    <mat-cell *matCellDef="let rol">
+                        <span class="label label-lg label-light-primary label-inline" [ngClass]="{'label-success': rol.status == true, 'label-danger': rol.status == false }">
+							{{ rol.status ? 'Activo' : 'Inactivo' }}
+						</span>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+        </div>
+        <div class="mat-table__bottom">
+            <mat-paginator [pageSize]="5" [pageSizeOptions]="[3, 5, 10]" [showFirstLastButtons]="true"></mat-paginator>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

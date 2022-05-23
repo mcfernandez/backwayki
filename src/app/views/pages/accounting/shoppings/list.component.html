@@ -1,0 +1,77 @@
+<kt-portlet>
+    <kt-portlet-header [title]="'Compras'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            <a (click)="setCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer">Crear</a>
+            <a (click)="getPagination()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer">Búsqueda</a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="form kt-margin-b-30">
+            <div class="form-filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-3 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [matDatepicker]="_startdate" name="startdate" [(ngModel)]="startdate" placeholder="Fecha de inicio" />
+                            <mat-datepicker-toggle matSuffix [for]="_startdate"></mat-datepicker-toggle>
+                            <mat-datepicker #_startdate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3 kt-margin-bottom-10-mobile mr-10">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [matDatepicker]="_enddate" name="enddate" [(ngModel)]="enddate" placeholder="Fecha de finalización" />
+                            <mat-datepicker-toggle matSuffix [for]="_enddate"></mat-datepicker-toggle>
+                            <mat-datepicker #_enddate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mat-table__wrapper">
+            <mat-table class="lmat-elevation-z8" #table [dataSource]="dataSource" matSort #sort1="matSort" matSortActive="createdon" matSortDirection="desc" matSortDisableClear>
+                <ng-container matColumnDef="date">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ ConvertDate(listpagination.date, false) }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.name }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.amount.toFixed(2) }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination">
+                        <span class="label label-lg label-light-primary label-inline" [ngClass]="{ 'label-success': listpagination.status==true, 'label-danger': listpagination.status==false }">
+                            {{ listpagination.status ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="modifiedon">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Modificado por</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination">{{ listpagination.modifiedon | date:'dd/MM/yyyy HH:mm:ss' }}<br />{{ listpagination.modifiedbyname }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination">
+                        <button mat-icon-button type="button" color="primary" matTooltip="Editar" (click)="setEdit(listpagination.id)">
+                            <mat-icon>create</mat-icon>
+                        </button>
+                        <button mat-icon-button type="button" class="text-warning" matTooltip="Activar / Desactivar" (click)="setChangeStatus(listpagination.id, listpagination.name, listpagination.status)">
+                            <mat-icon>settings_ethernet</mat-icon>
+                        </button>
+                        <button mat-icon-button type="button" class="text-danger" matTooltip="Borrar" (click)="setDelete(listpagination.id, listpagination.name)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+        </div>
+        <div class="mat-table__bottom">
+            <mat-paginator [pageSize]="20" [pageSizeOptions]="[3, 5, 10, 20]" [showFirstLastButtons]="true"></mat-paginator>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

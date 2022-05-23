@@ -1,0 +1,33 @@
+<div class="card card-custom" [ngClass]="{ 'card-body-progress card-body-progress-overlay' : viewLoading }">
+	<div class="card-header">
+		<div class="card-title">
+			<h3 class="card-label">{{data.title}}</h3>
+		</div>
+	</div>
+	<div class="form">
+		<div class="card-body">
+			<div class="card-body-progress">
+				<mat-spinner [diameter]="20"></mat-spinner>
+			</div>
+
+			<div class="form-group row">
+				<div class="col-lg-12">
+					{{viewLoading ? data.waitDesciption : data.description}}
+				</div>
+			</div>
+		</div>
+		<div class="card-footer">
+			<div class="d-flex justify-content-center">
+				<div class="mr-2"></div>
+				<div>
+					<a href="javascript:;" class="btn mr-2 btn-outline-danger"(click)="onNoClick()" mat-raised-button >
+						<span class="hidden-mobile">Cancelar</span>
+					  </a>
+					  <a href="javascript:;" class="btn mr-2 btn-outline-warning" (click)="onYesClick()" mat-raised-button >
+						<span class="hidden-mobile">Aceptar</span>
+					  </a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

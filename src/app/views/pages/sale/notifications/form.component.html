@@ -1,0 +1,231 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="bookingname" name="bookingname" placeholder="Reserva" readonly="readonly" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="tourname" name="tourname" placeholder="Tour" readonly="readonly" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="arename" name="arename" placeholder="Area" readonly="readonly" />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="authorname" name="authorname" placeholder="Autor" readonly="readonly" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="date" name="date" placeholder="Fecha" readonly="readonly" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="reasonname" name="reasonname" placeholder="Estado" readonly="readonly" />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea matInput maxlength="1000" [(ngModel)]="description" name="description" placeholder="Observación" rows="5" cols="30" readonly="readonly"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <p style="font-weight: bold;">AREA DE RESERVAS</p>
+                                            <a href="javascript:;" class="btn btn-primary mr-2 fa-pull-right" color="primary" (click)="lista(1)" mat-raised-button>
+                                                <span class="hidden-mobile">Lista</span>
+                                            </a>
+                                        </div>
+                                        <div *ngIf="!(item1.list)">
+                                            <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [(ngModel)]="item1.date" name="item1date" placeholder="Fecha" readonly="readonly" />
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <textarea matInput maxlength="500" [(ngModel)]="item1.description" name="item1description" placeholder="Observación" rows="3" cols="50" readonly="readonly"></textarea>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-9 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Acción</mat-label>
+                                                    <mat-select [(ngModel)]="item1.action" name="item1action">
+                                                        <mat-option *ngFor="let item of listReservation" [value]="item.id" [disabled]="!(item.isactive)">
+                                                            {{ item.name }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <textarea matInput maxlength="500" [(ngModel)]="item1.response" name="item1response" placeholder="Revisión" rows="5" cols="50" [readonly]="item1.approved"></textarea>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [(ngModel)]="item1.reasonname" name="item1reasonname" placeholder="Estado" readonly="readonly" />
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!(item1.approved) && !(item1.asesorventa)">
+                                                <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="update(item1.id, 1, 2)" mat-raised-button>
+                                                    <span class="hidden-mobile">Aprobar</span>
+                                                </a>
+                                                <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="update(item1.id, 1, 1)" mat-raised-button>
+                                                    <span class="hidden-mobile">En revisión</span>
+                                                </a>
+                                            </div>
+                                            <div *ngIf="!(item1.approved) && item1.asesorventa">
+                                                <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="update(item1.id, 1, 3)" mat-raised-button>
+                                                    <span class="hidden-mobile">Revisado</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="item1.list">
+                                            <table class="table table-striped table-bordered table-hover table-full-width dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 15%;">Fecha</th>
+                                                        <th style="width: 35%;">Asesor</th>
+                                                        <th style="width: 35%;">Reservista</th>
+                                                        <th style="width: 15%;">Estado</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngIf="(item1.items.length == 0)">
+                                                        <td colspan="4" style="height: 30px;">no hay resultados</td>
+                                                    </tr>
+                                                    <tr *ngFor="let dt of item1.items">
+                                                        <td>{{ dt.date }}</td>
+                                                        <td>{{ dt.description }}</td>
+                                                        <td>{{ dt.response }}</td>
+                                                        <td>{{ dt.reasonname }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <p style="font-weight: bold;">AREA DE CONTABILIDAD</p>
+                                            <a href="javascript:;" class="btn btn-primary mr-2 fa-pull-right" color="primary" (click)="lista(2)" mat-raised-button>
+                                                <span class="hidden-mobile">Lista</span>
+                                            </a>
+                                        </div>
+                                        <div *ngIf="!(item2.list)">
+                                            <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [(ngModel)]="item2.date" name="item2date" placeholder="Fecha" readonly="readonly" />
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <textarea matInput maxlength="500" [(ngModel)]="item2.description" name="item2description" placeholder="Observación" rows="3" cols="50" readonly="readonly"></textarea>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-9 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Acción</mat-label>
+                                                    <mat-select [(ngModel)]="item2.action" name="item2action">
+                                                        <mat-option *ngFor="let item of listFinance" [value]="item.id" [disabled]="!(item.isactive)">
+                                                            {{ item.name }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <textarea matInput maxlength="500" [(ngModel)]="item2.response" name="item2response" placeholder="Revisión" rows="5" cols="50" [readonly]="item2.approved"></textarea>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput [(ngModel)]="item2.reasonname" name="item2reasonname" placeholder="Estado" readonly="readonly" />
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!(item2.approved) && !(item2.asesorventa)">
+                                                <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="update(item2.id, 1, 2)" mat-raised-button>
+                                                    <span class="hidden-mobile">Aprobar</span>
+                                                </a>
+                                                <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="update(item2.id, 1, 1)" mat-raised-button>
+                                                    <span class="hidden-mobile">En revisión</span>
+                                                </a>
+                                            </div>
+                                            <div *ngIf="!(item2.approved) && item2.asesorventa">
+                                                <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="update(item2.id, 1, 3)" mat-raised-button>
+                                                    <span class="hidden-mobile">Revisado</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="item2.list">
+                                            <table class="table table-striped table-bordered table-hover table-full-width dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 15%;">Fecha</th>
+                                                        <th style="width: 35%;">Asesor</th>
+                                                        <th style="width: 35%;">Contador</th>
+                                                        <th style="width: 15%;">Estado</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngIf="(item2.items.length == 0)">
+                                                        <td colspan="4" style="height: 30px;">no hay resultados</td>
+                                                    </tr>
+                                                    <tr *ngFor="let dt of item2.items">
+                                                        <td>{{ dt.date }}</td>
+                                                        <td>{{ dt.description }}</td>
+                                                        <td>{{ dt.response }}</td>
+                                                        <td>{{ dt.reasonname }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="getTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

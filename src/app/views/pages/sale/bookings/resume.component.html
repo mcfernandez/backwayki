@@ -1,0 +1,428 @@
+<kt-portlet>
+    <kt-portlet-header [title]="GetTitle()" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="getPDF()" mat-raised-button matTooltip="PDF">
+                <span class="hidden-mobile">PDF</span>
+            </a>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> RESUMEN
+                </ng-template>
+                <ng-template matTabContent>
+                    <!-- RESUME -->
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <p><strong>CODIGO:</strong> {{ entity.booking.code }}</p>
+                            <p><strong>TOUR:</strong> {{ entity.booking.name }}</p>
+                            <p><strong>CATEGORIA:</strong> {{ entity.booking.category }}</p>
+                            <p><strong>TIPO:</strong> {{ entity.booking.type }}</p>
+                            <p><strong>FECHA DE VIAJE:</strong> {{ entity.booking.tripDate }}</p>
+                            <!--<p><strong>FECHA DE COMPRA:</strong> {{ entity.booking.buyDate }}</p>-->
+                        </div>
+                        <div class="col-lg-5">
+                            <p><strong>CONTACTO:</strong> {{ entity.booking.contactname }}</p>
+                            <p><strong>CORREO:</strong> {{ entity.booking.contactemail }}</p>
+                            <p><strong>ASESOR:</strong> {{ entity.booking.advisername }}</p>
+                        </div>
+                    </div>
+                    <!-- LISTADO DE PASAJEROS -->
+                    <div class="row" *ngIf="entity.passangerRegistry.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>LISTADO DE PASAJEROS:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ORDEN</th>
+                                        <th>TIPO</th>
+                                        <th>PASAJERO</th>
+                                        <th>SEXO</th>
+                                        <th>FECHA DE NACIMIENTO</th>
+                                        <th>DOCUMENTO IDENTIDAD</th>
+                                        <th>DESCRIPCION</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let passangerRegistry of entity.passangerRegistry;">
+                                        <td>{{ passangerRegistry.number }}</td>
+                                        <td>{{ passangerRegistry.type }}</td>
+                                        <td>{{ passangerRegistry.name }}</td>
+                                        <td>{{ passangerRegistry.sex }}</td>
+                                        <td>{{ passangerRegistry.dateofbirth }}</td>
+                                        <td>{{ passangerRegistry.document }}</td>
+                                        <td>{{ passangerRegistry.description }}</td>
+                                        <td>
+                                            <button mat-icon-button type="button" color="primary" matTooltip="Ver" (click)="setClientEdit(passangerRegistry.clientId)" *ngIf="passangerRegistry.clientId != null">
+                                                <mat-icon>create</mat-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- ITINERARIOS -->
+                    <div class="row" *ngIf="entity.itineraries.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>ITINERARIOS:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>NOMBRE</th>
+                                        <th>DESCRIPCION</th>
+                                        <th>OBSERVACION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let itinerary of entity.itineraries;">
+                                        <td>{{ itinerary.name }}</td>
+                                        <td>{{ itinerary.description }}</td>
+                                        <td>{{ itinerary.observation }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- SERVICIOS ADICIONALES -->
+                    <div class="row" *ngIf="entity.additionalServices.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>SERVICIOS ADICIONALES:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>FECHA DE COMPRA</th>
+                                        <th>PRODUCTO</th>
+                                        <th>COSTO</th>
+                                        <th>CANTIDAD</th>
+                                        <th>TOTAL</th>
+                                        <th>OBSERVACION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let includeServices of entity.additionalServices;">
+                                        <td>{{ includeServices.buyDate }}</td>
+                                        <td>{{ includeServices.productName }}</td>
+                                        <td>{{ includeServices.price | currency: 'USD' | lowercase }}</td>
+                                        <td>{{ includeServices.quantity }}</td>
+                                        <td>{{ includeServices.total | currency: 'USD' | lowercase }}</td>
+                                        <td>{{ includeServices.description }}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right;">TOTAL</td>
+                                        <td>{{ total_Servicios_adicionales | currency: 'USD' | lowercase }}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- HOTELES -->
+                    <div class="row" *ngIf="entity.hotels.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>HOTELES:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>FECHA DE COMPRA</th>
+                                        <th>HOTEL / HABITACION</th>
+                                        <th>COSTO</th>
+                                        <th>CANTIDAD</th>
+                                        <th>TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let hotel of entity.hotels">
+                                    <tr>
+                                        <td>{{ hotel.date }}</td>
+                                        <td>{{ hotel.hotelroom }}</td>
+                                        <td>{{ hotel.cost }}</td>
+                                        <td>{{ hotel.amount }}</td>
+                                        <td>{{ hotel.total | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right;">TOTAL</td>
+                                        <td>{{ total_hotels | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- OTROS TOURS -->
+                    <div class="row" *ngIf="entity.otherTours.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>OTROS TOURS:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>FECHA DE COMPRA</th>
+                                        <th>PRODUCTO</th>
+                                        <th>COSTO</th>
+                                        <th>CANTIDAD</th>
+                                        <th>TOTAL</th>
+                                        <th>OBSERVACION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let includeServices of entity.otherTours;">
+                                        <td>{{ includeServices.buyDate }}</td>
+                                        <td>{{ includeServices.productName }}</td>
+                                        <td>{{ includeServices.price | currency: 'USD' | lowercase }}</td>
+                                        <td>{{ includeServices.quantity }}</td>
+                                        <td>{{ includeServices.total | currency: 'USD' | lowercase }}</td>
+                                        <td>{{ includeServices.description }}</td>
+                                    </tr>
+                                </tbody>
+                                <!--<tfoot>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right;">TOTAL</td>
+                                        <td>{{ total_otherTours | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                </tfoot>-->
+                            </table>
+                        </div>
+                    </div>
+                    <!-- SERVICIOS INCLUIDOS -->
+                    <div class="row" *ngIf="entity.includeServices.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>SERVICIOS INCLUIDOS:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">#</th>
+                                        <th style="width: 60%;">SERVICIO</th>
+                                        <th style="width: 35%;">OBSERVACION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let includeServices of entity.includeServices;">
+                                        <td>{{ includeServices.number }}</td>
+                                        <td>{{ includeServices.name }}</td>
+                                        <td>{{ includeServices.observation }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- SERVICIOS NO INCLUIDOS -->
+                    <div class="row" *ngIf="entity.includeNotServices.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>SERVICIOS NO INCLUIDOS:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">#</th>
+                                        <th style="width: 60%;">SERVICIO</th>
+                                        <th style="width: 35%;">OBSERVACION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let includeNotServices of entity.includeNotServices;">
+                                        <td>{{ includeNotServices.number }}</td>
+                                        <td>{{ includeNotServices.name }}</td>
+                                        <td>{{ includeNotServices.observation }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- VARIACION DE PRECIO -->
+                    <div class="row" *ngIf="(entity.paymentExtra.substract.length + entity.paymentExtra.add.length) > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>VARIACION DE PRECIO:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>FECHA</th>
+                                        <th>VARIACION</th>
+                                        <th>DETALLE</th>
+                                        <th>MONTO</th>
+                                        <th>OBSERVACION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let payments of entity.paymentExtra.substract;">
+                                        <td>{{ payments.buyDate }}</td>
+                                        <td>DESCUENTO</td>
+                                        <td>{{ payments.name }}</td>
+                                        <td>{{ payments.total | currency: 'USD' | lowercase }}</td>
+                                        <td>{{ payments.description }}</td>
+                                    </tr>
+                                    <tr *ngFor="let payments of entity.paymentExtra.add;">
+                                        <td>{{ payments.buyDate }}</td>
+                                        <td>ADICION</td>
+                                        <td>{{ payments.name }}</td>
+                                        <td>{{ payments.total | currency: 'USD' | lowercase }}</td>
+                                        <td>{{ payments.description }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- PAGO -->
+                    <div class="row" *ngIf="entity.buy.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>PAGO:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>FECHA</th>
+                                        <th>CODIGO TRANSACCION</th>
+                                        <th>METODO DE PAGO</th>
+                                        <th>COMISION</th>
+                                        <th>DESCRIPCION</th>
+                                        <th>MONTO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let bu of entity.buy;">
+                                        <td>{{ bu.buyDate }}</td>
+                                        <td>{{ bu.name }}</td>
+                                        <td>{{ bu.paymentMethod }}</td>
+                                        <td>{{ bu.commission }}</td>
+                                        <td>{{ bu.description }}</td>
+                                        <td>{{ bu.total | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- BALANCE FINAL -->
+                    <div class="row">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>BALANCE FINAL:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>FECHA</th>
+                                        <th>DETALLE</th>
+                                        <th>COMISION</th>
+                                        <th>MONTO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let bu of entity.buy;">
+                                        <td>{{ bu.buyDate }}</td>
+                                        <td>{{ bu.paymentMethod }}</td>
+                                        <td>{{ bu.commission }}</td>
+                                        <td>{{ bu.total | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>TOTAL EN COMPRAS</strong> </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{ total_buys | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                    <tr *ngFor="let payments of entity.payments;">
+                                        <td>{{ payments.buyDate }}</td>
+                                        <td>{{ payments.paymentMethod }}</td>
+                                        <td>{{ payments.commission }}</td>
+                                        <td>{{ payments.total | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>TOTAL EN PAGOS</strong> </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{ total_payments | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                    <tr *ngFor="let payments of entity.paymentExtra.substract;">
+                                        <td>{{ payments.buyDate }}</td>
+                                        <td>{{ payments.paymentMethod }}</td>
+                                        <td>{{ payments.commission }}</td>
+                                        <td>{{ payments.total | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>TOTAL DESCUENTOS</strong> </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>(-{{ total_substract | currency: 'USD' | lowercase}})</td>
+                                    </tr>
+                                    <tr *ngFor="let payments of entity.paymentExtra.add;">
+                                        <td>{{ payments.buyDate }}</td>
+                                        <td>{{ payments.paymentMethod }}</td>
+                                        <td>{{ payments.commission }}</td>
+                                        <td>{{ payments.total | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>TOTAL AGREGACIONES</strong> </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-end">{{ total_add | currency: 'USD' | lowercase }}</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td><strong>PENDIENTE DE PAGO</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{ entity.booking.debt | currency: 'USD' | lowercase }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- OBSERVACION DE LA RESERVA -->
+                    <div class="row">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>OBSERVACION:</strong></p>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td>
+                                        <div style="white-space: pre-line;">{{ entity.booking.observation }}</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- INCIDENCIAS -->
+                    <div class="row" *ngIf="entity.incident.length > 0">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <p style="color: green; font-size: 16px;"><strong>INCIDENCIAS:</strong></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>FECHA</th>
+                                        <th>TITULO</th>
+                                        <th>DETALLE</th>
+                                        <th>OBSERVACION</th>
+                                        <th>RESPUESTA</th>
+                                        <th>ESTADO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let bu of entity.incident;">
+                                        <td>{{ bu.createdOnDate }}</td>
+                                        <td>{{ bu.name }}</td>
+                                        <td>{{ bu.description }}</td>
+                                        <td>{{ bu.observation }}</td>
+                                        <td>{{ bu.response }}</td>
+                                        <td>{{ bu.status }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="GetTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

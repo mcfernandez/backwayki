@@ -1,0 +1,148 @@
+<div class="overflow-hidden">
+    <h2 class="example-h2 mt-5 ml-5">Asignacion de Modulo al Rol {{data.name}}</h2>
+    <hr class="mt-5">
+    <section>
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Modulo</th>
+                    <th>Listar</th>
+                    <th>Ver</th>
+                    <th>Actualizar</th>
+                    <th>Activar</th>
+                    <th>Crear</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let module of module_list">
+                <tr>
+                    <td colspan="7" class="text-center bg-secondary-o-100">
+                        <strong> {{module.title}}</strong>
+                    </td>
+                </tr>
+                <tr *ngIf="module.subitems == null">
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{module.title}}" [(ngModel)]="module.status" />
+                                <span></span>
+                            </label>
+                        </span>
+                    </td>
+                    <td> {{module.title}}</td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <!-- listar -->
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{module.permissions[0].action}}"
+                                    [(ngModel)]="module.permissions[0].status" />
+                                <span></span>
+                            </label>
+                        </span></td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{module.permissions[1].action}}"
+                                    [(ngModel)]="module.permissions[1].status" />
+                                <span></span>
+                            </label>
+                        </span></td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{module.permissions[2].action}}"
+                                    [(ngModel)]="module.permissions[2].status" />
+                                <span></span>
+                            </label>
+                        </span>
+                    </td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{module.permissions[3].action}}"
+                                    [(ngModel)]="module.permissions[3].status" />
+                                <span></span>
+                            </label>
+                        </span>
+                    </td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{module.permissions[4].action}}"
+                                    [(ngModel)]="module.permissions[4].status" />
+                                <span></span>
+                            </label>
+                        </span>
+                    </td>
+                </tr>
+                <tr *ngFor="let subitems of module.subitems">
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{subitems.title}}" [(ngModel)]="subitems.status" />
+                                <span></span>
+                            </label>
+                        </span>
+                    </td>
+                    <td> {{subitems.title}}</td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{subitems.permissions[0].action}}"
+                                    [(ngModel)]="subitems.permissions[0].status" />
+                                <span></span>
+                            </label>
+                        </span></td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{subitems.permissions[1].action}}"
+                                    [(ngModel)]="subitems.permissions[1].status" />
+                                <span></span>
+                            </label>
+                        </span></td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{subitems.permissions[2].action}}"
+                                    [(ngModel)]="subitems.permissions[2].status" />
+                                <span></span>
+                            </label>
+                        </span></td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{subitems.permissions[3].action}}"
+                                    [(ngModel)]="subitems.permissions[3].status" />
+                                <span></span>
+                            </label>
+                        </span>
+                    </td>
+                    <td class="p-0">
+                        <span class="switch switch-icon">
+                            <label class="custom-switch">
+                                <input type="checkbox" name="{{subitems.permissions[4].action}}"
+                                    [(ngModel)]="subitems.permissions[4].status" />
+                                <span></span>
+                            </label>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </section>
+    <section class="mt-5">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <a href="javascript:;" class="btn mr-2 btn-outline-danger" (click)="cancelar()" mat-raised-button>
+                    <span class="hidden-mobile">Cancelar</span>
+                </a>
+                <a href="javascript:;" class="btn mr-2 btn-outline-warning" (click)="guardar()" mat-raised-button>
+                    <span class="hidden-mobile">Actualizar</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>

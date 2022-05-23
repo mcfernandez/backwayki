@@ -1,0 +1,854 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar e ir a la lista principal" *ngIf="selectedTab == 0 && !(_IsRead)">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="form kt-margin-b-30" *ngIf="!(selectedTab == 0 || selectedTab == 1)">
+            <div class="form-filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-4 kt-margin-bottom-10-mobile">
+                        <mat-form-field style="width: 100%;">
+                            <mat-select [(ngModel)]="corporateclientid" name="corporateclientid" (ngModelChange)="SetCorporateClient()" placeholder="cliente corporativo">
+                                <mat-option *ngFor="let item of listCorporateClient" [value]="item.id">
+                                    {{ item.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4 kt-margin-bottom-10-mobile" *ngIf="!(_IsRead)">
+                        <a (click)="duplicate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer">Duplicar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_code maxlength="10" [disabled]="_IsEdit" [(ngModel)]="code" name="code" placeholder="Código">
+                                            <mat-hint align="end">{{ _code.value.length }} / 10</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_name maxlength="100" [(ngModel)]="name" name="name" placeholder="Nombre" />
+                                            <mat-hint align="end">{{ _name.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Tipo</mat-label>
+                                            <mat-select [disabled]="_IsEdit" [(ngModel)]="typeid" name="typeid" placeholder="Tipo" (selectionChange)="onChangeTipo($event)">
+                                                <mat-option *ngFor="let item of listType" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Categoría</mat-label>
+                                            <mat-select [disabled]="_IsEdit" [(ngModel)]="categoryid" name="categoryid">
+                                                <mat-option *ngFor="let item of listCategory" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_duration maxlength="2" [(ngModel)]="duration" [disabled]="_IsEdit" name="duration" placeholder="Duración">
+                                            <mat-hint align="end">{{ _duration.value.length }} / 2</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile" *ngIf="isPackage">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_hotelnight maxlength="2" [(ngModel)]="hotelnight" [disabled]="_IsEdit" name="hotelnight" placeholder="Noches de hotel" />
+                                            <mat-hint align="end">{{ _hotelnight.value.length }} / 2</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_description maxlength="1000" [(ngModel)]="description" name="description" placeholder="Descripción">
+                                            <mat-hint align="end">{{ _description.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Links
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_linkname maxlength="100" [(ngModel)]="link.name" id="linkname" name="linkname" placeholder="Nombre">
+                                                <mat-hint align="end">{{ _linkname.value.length }} / 100</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_linklink maxlength="100" [(ngModel)]="link.link" name="linklink" placeholder="Link">
+                                                <mat-hint align="end">{{ _linklink.value.length }} / 100</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_linkdescription maxlength="1000" [(ngModel)]="link.description" name="linkdescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _linkdescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                            <a (click)="setLinkCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Crear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Nombre</th>
+                                            <th style="width: 55%">Link</th>
+                                            <th style="width: 15%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourLink.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="3" style="height: 30px;">no existen links</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourLink.length > 0)">
+                                        <tr *ngFor="let dt of listTourLink">
+                                            <td style="text-align: left;">{{ dt.name }}</td>
+                                            <td style="text-align: left;">{{ dt.link }}</td>
+                                            <td style="text-align: center;">
+                                                <a (click)="setLinkDelete(dt.id, dt.name)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Borrar</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Itinerarios
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_itineraryname maxlength="100" [(ngModel)]="itinerary.name" id="itineraryname" name="itineraryname" placeholder="Nombre">
+                                                <mat-hint align="end">{{ _itineraryname.value.length }} / 100</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_itinerarydescription maxlength="1000" [(ngModel)]="itinerary.description" name="itinerarydescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _itinerarydescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_itineraryobservation maxlength="1000" [(ngModel)]="itinerary.observation" name="itineraryobservation" placeholder="Observación">
+                                                <mat-hint align="end">{{ _itineraryobservation.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                            <a (click)="setItineraryCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(itinerary.isedit) && !(_IsRead)">Crear</a>
+                                            <a (click)="setItineraryUpdate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="itinerary.isedit && !(_IsRead)">Actualizar</a>
+                                            <a (click)="setItineraryClear()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="itinerary.isedit && !(_IsRead)">Cancelar</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 25%">Nombre</th>
+                                            <th style="width: 60%">Descripción</th>
+                                            <th style="width: 15%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourItineraryFilter.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="3" style="height: 30px;">no existen itinerarios</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourItineraryFilter.length > 0)">
+                                        <tr *ngFor="let dt of listTourItineraryFilter">
+                                            <td style="text-align: left;">{{ dt.name }}</td>
+                                            <td style="text-align: left;">{{ dt.description }}</td>
+                                            <td style="text-align: center;">
+                                                <button mat-icon-button type="button" color="primary" matTooltip="Editar" (click)="setItineraryShow(dt.id, dt.name, dt.description, dt.observation)" *ngIf="!(_IsRead)">
+                                                    <mat-icon>create</mat-icon>
+                                                </button>
+                                                <button mat-icon-button type="button" color="primary" matTooltip="Borrar" (click)="setItineraryDelete(dt.id, dt.name)" *ngIf="!(_IsRead)">
+                                                    <mat-icon>delete_forever</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Servicios incluídos
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_serviceincludedname maxlength="100" [(ngModel)]="serviceincluded.name" name="serviceincludedname" placeholder="Nombre">
+                                                <mat-hint align="end">{{ _serviceincludedname.value.length }} / 100</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_serviceincludeddescription maxlength="1000" [(ngModel)]="serviceincluded.description" name="serviceincludeddescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _serviceincludeddescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                            <a (click)="setServiceIncludedCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Crear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 85%">Nombre</th>
+                                            <th style="width: 15%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourServiceIncludedFilter.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="2" style="height: 30px;">no existen servicios incluídos</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourServiceIncludedFilter.length > 0)">
+                                        <tr *ngFor="let dt of listTourServiceIncludedFilter">
+                                            <td style="text-align: left;">{{ dt.name }}</td>
+                                            <td style="text-align: center;">
+                                                <a (click)="setServiceIncludedDelete(dt.id, dt.name)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Borrar</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Servicios no Incluídos
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_servicenotincludedname maxlength="100" [(ngModel)]="servicenotincluded.name" id="servicenotincludedname" name="servicenotincludedname" placeholder="Nombre">
+                                                <mat-hint align="end">{{ _servicenotincludedname.value.length }} / 100</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_servicenotincludeddescription maxlength="1000" [(ngModel)]="servicenotincluded.description" name="servicenotincludeddescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _servicenotincludeddescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                            <a (click)="setServiceNotIncludedCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Crear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 85%">Nombre</th>
+                                            <th style="width: 15%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourServiceNotIncludedFilter.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="3" style="height: 30px;">no existen servicios no incluidos</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourServiceNotIncludedFilter.length > 0)">
+                                        <tr *ngFor="let dt of listTourServiceNotIncludedFilter">
+                                            <td style="text-align: left;">{{ dt.name }}</td>
+                                            <td style="text-align: center;">
+                                                <a (click)="setServiceNotIncludedDelete(dt.id, dt.name)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Borrar</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Precios
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Modalidad</mat-label>
+                                                <mat-select [(ngModel)]="price.tourtypeid" name="pricetourtypeid" [disabled]="price.isedit">
+                                                    <mat-option *ngFor="let item of listPriceType" [value]="item.id" [disabled]="!(item.isactive)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Categoría</mat-label>
+                                                <mat-select [(ngModel)]="price.categoryid" name="pricecategoryid" [disabled]="price.isedit">
+                                                    <mat-option *ngFor="let item of listCategoryPrice" [value]="item.id" [disabled]="!(item.isactive)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Tipo de cliente</mat-label>
+                                                <mat-select [(ngModel)]="price.customertypeid" name="pricecustomertypeid" [disabled]="price.isedit">
+                                                    <mat-option *ngFor="let item of listCustomerType" [value]="item.id" [disabled]="!(item.isactive)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_pricequantity maxlength="2" [(ngModel)]="price.quantity" name="pricequantity" placeholder="Cantidad" [readonly]="price.isedit">
+                                                <mat-hint align="end">{{ _pricequantity.value.length }} / 2</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_priceprice maxlength="10" [(ngModel)]="price.price" name="priceprice" placeholder="Precio (US$)">
+                                                <mat-hint align="end">{{ _priceprice.value.length }} / 10</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_pricedescription maxlength="1000" [(ngModel)]="price.description" name="pricedescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _pricedescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                    <a (click)="setPriceCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(price.isedit) && !(_IsRead)">Crear</a>
+                                    <a (click)="setPriceUpdate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="price.isedit && !(_IsRead)">Actualizar</a>
+                                    <a (click)="setPriceClear()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="price.isedit && !(_IsRead)">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center; width: 20%">Modalidad</th>
+                                            <th style="text-align: center; width: 20%">Categoría</th>
+                                            <th style="text-align: center; width: 20%">Tipo de cliente</th>
+                                            <th style="text-align: center; width: 15%">Cantidad</th>
+                                            <th style="text-align: center; width: 15%">Precio</th>
+                                            <th style="text-align: center; width: 10%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourPriceFilter.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="6" style="height: 30px;">no existen precios</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourPriceFilter.length > 0)">
+                                        <tr *ngFor="let dt of listTourPriceFilter">
+                                            <td style="text-align: left;">{{ dt.tourtypename }}</td>
+                                            <td style="text-align: left;">{{ dt.categoryname }}</td>
+                                            <td style="text-align: left;">{{ dt.customertypename }}</td>
+                                            <td style="text-align: left;">{{ dt.quantity }}</td>
+                                            <td style="text-align: left;">{{ dt.price }}</td>
+                                            <td style="text-align: center;">
+                                                <button mat-icon-button type="button" color="primary" matTooltip="Editar" (click)="setPriceShow(dt.id, dt.tourtypeid, dt.categoryid, dt.customertypeid, dt.quantity, dt.price, dt.description)" *ngIf="!(_IsRead)">
+                                                    <mat-icon>create</mat-icon>
+                                                </button>
+                                                <button mat-icon-button type="button" color="primary" matTooltip="Borrar" (click)="setPriceDelete(dt.id, dt.tourtypename, dt.categoryname, dt.customertypename, dt.quantity)" *ngIf="!(_IsRead)">
+                                                    <mat-icon>delete_forever</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Servicio Adicional
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Servicio adicinal</mat-label>
+                                                <mat-select [(ngModel)]="additionalservice.additionalserviceparentid" name="additionalserviceadditionalserviceparentid" (selectionChange)="onChangeAdditionalService($event)">
+                                                    <mat-option *ngFor="let item of listAdditionalService" [value]="item.id" [disabled]="!(item.isactive)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row" *ngIf="isShowAdditionalServiceChild">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Opción del servicio adicional</mat-label>
+                                                <mat-select [(ngModel)]="additionalservice.additionalserviceid" name="additionalserviceadditionalserviceid" (selectionChange)="onChangeAdditionalServiceChild($event)">
+                                                    <mat-option *ngFor="let item of listAdditionalServiceChild" [value]="item.id" [disabled]="!(item.isactive)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_additionalserviceprice maxlength="10" [(ngModel)]="additionalservice.price" name="additionalserviceprice" placeholder="Precio (US$)">
+                                                <mat-hint align="end">{{ _additionalserviceprice.value.length }} / 10</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_additionalservicedescription maxlength="1000" [(ngModel)]="additionalservice.description" name="additionalservicedescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _additionalservicedescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                    <a (click)="setAdditionalServiceCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Crear</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center; width: 50%">Servicio adicional</th>
+                                            <th style="text-align: center; width: 35%">Precio</th>
+                                            <th style="text-align: center; width: 15%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourAdditionalServiceFilter.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="3" style="height: 30px;">no existen servicios adicionales</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourAdditionalServiceFilter.length > 0)">
+                                        <tr *ngFor="let dt of listTourAdditionalServiceFilter">
+                                            <td style="text-align: left;">{{ dt.additionalserviceparentname }}<br />{{ dt.additionalservicename }}</td>
+                                            <td style="text-align: right;">{{ dt.price }}</td>
+                                            <td style="text-align: center;">
+                                                <a (click)="setAdditionalServiceDelete(dt.id, dt.additionalserviceparentname, dt.additionalservicename)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Borrar</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit && isPackage">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Configuración de hotel
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Tipo de hotel</mat-label>
+                                                <mat-select [(ngModel)]="hotel.hoteltypeid" name="hotelhoteltypeid" #_hotelhoteltypeid [disabled]="hotel.isedit">
+                                                    <mat-option *ngFor="let item of listHotelType" [value]="item.id" [disabled]="!(item.isactive)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Tipo de habitación</mat-label>
+                                                <mat-select [(ngModel)]="hotel.roomtypeid" name="hotelroomtypeid" [disabled]="hotel.isedit">
+                                                    <mat-option *ngFor="let item of listRoomType" [value]="item.id" [disabled]="!(item.isactive)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_hotelprice maxlength="10" [(ngModel)]="hotel.price" name="hotelprice" placeholder="Precio (US$)">
+                                                <mat-hint align="end">{{ _hotelprice.value.length }} / 10</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_hoteldescription maxlength="1000" [(ngModel)]="hotel.description" name="hoteldescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _hoteldescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                    <a (click)="setHotelCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(hotel.isedit) && !(_IsRead)">Crear</a>
+                                    <a (click)="setHotelUpdate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="hotel.isedit && !(_IsRead)">Actualizar</a>
+                                    <a (click)="setHotelClear()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="hotel.isedit && !(_IsRead)">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center; width: 30%">Tipo de hotel</th>
+                                            <th style="text-align: center; width: 30%">Tipo de habitación</th>
+                                            <th style="text-align: center; width: 25%">Precio</th>
+                                            <th style="text-align: center; width: 15%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourHotelFilter.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="4" style="height: 30px;">no existen configuraciones de hoteles</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourHotelFilter.length > 0)">
+                                        <tr *ngFor="let dt of listTourHotelFilter">
+                                            <td style="text-align: left;">{{ dt.hoteltypename }}</td>
+                                            <td style="text-align: left;">{{ dt.roomtypename }}</td>
+                                            <td style="text-align: left;">{{ dt.price }}</td>
+                                            <td style="text-align: center;">
+                                                <button mat-icon-button type="button" color="primary" matTooltip="Editar" (click)="setHotelShow(dt.id, dt.hoteltypeid, dt.roomtypeid, dt.price, dt.description)" *ngIf="!(_IsRead)">
+                                                    <mat-icon>create</mat-icon>
+                                                </button>
+                                                <button mat-icon-button type="button" color="primary" matTooltip="Borrar" (click)="setHotelDelete(dt.id, dt.hoteltypename, dt.roomtypename)" *ngIf="!(_IsRead)">
+                                                    <mat-icon>delete_forever</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Equipos
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Categoría</mat-label>
+                                                <mat-select [(ngModel)]="equipmenttool.categoryid" name="equipmenttoolcategoryid" (selectionChange)="onChangeEquipmentToolCategory($event)">
+                                                    <mat-option *ngFor="let item of listEquipmentToolCategory" [value]="item.id" [disabled]="!(item.status)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Sub categoría</mat-label>
+                                                <mat-select [(ngModel)]="equipmenttool.subcategoryid" name="equipmenttoolsubcategoryid">
+                                                    <mat-option *ngFor="let item of listEquipmentToolSubCategory" [value]="item.id">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_equipmenttooldescription maxlength="1000" [(ngModel)]="equipmenttool.description" name="equipmenttooldescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _equipmenttooldescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                            <a (click)="setEquipmentToolCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Crear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 35%">Categoria</th>
+                                            <th style="width: 35%">Sub categoria</th>
+                                            <th style="width: 10%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourEquipmentTool.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="3" style="height: 30px;">no existen equipos</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourEquipmentTool.length > 0)">
+                                        <tr *ngFor="let dt of listTourEquipmentTool">
+                                            <td style="text-align: left;">{{ dt.categoryidname }}</td>
+                                            <td style="text-align: left;">{{ dt.subcategoryidname }}</td>
+                                            <td style="text-align: center;">
+                                                <a (click)="setEquipmentToolDelete(dt.id, dt.name)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Borrar</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Alimentos
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Categoría</mat-label>
+                                                <mat-select [(ngModel)]="equipmentfood.categoryid" name="equipmentfoodcategoryid" (selectionChange)="onChangeEquipmentFoodCategory($event)">
+                                                    <mat-option *ngFor="let item of listEquipmentFoodCategory" [value]="item.id" [disabled]="!(item.status)">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Sub categoría</mat-label>
+                                                <mat-select [(ngModel)]="equipmentfood.subcategoryid" name="equipmentfoodsubcategoryid">
+                                                    <mat-option *ngFor="let item of listEquipmentFoodSubCategory" [value]="item.id">
+                                                        {{ item.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_equipmentfooddescription maxlength="1000" [(ngModel)]="equipmentfood.description" name="equipmentfooddescription" placeholder="Descripción">
+                                                <mat-hint align="end">{{ _equipmentfooddescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                            <a (click)="setEquipmentFoodCreate()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Crear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 35%">Categoria</th>
+                                            <th style="width: 35%">Sub categoria</th>
+                                            <th style="width: 10%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listTourEquipmentFood.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="3" style="height: 30px;">no existen alimentos</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listTourEquipmentFood.length > 0)">
+                                        <tr *ngFor="let dt of listTourEquipmentFood">
+                                            <td style="text-align: left;">{{ dt.categoryidname }}</td>
+                                            <td style="text-align: left;">{{ dt.subcategoryidname }}</td>
+                                            <td style="text-align: center;">
+                                                <a (click)="setEquipmentFoodDelete(dt.id, dt.name)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer" *ngIf="!(_IsRead)">Borrar</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="getTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="[_pathurl]" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar e ir a la lista principal" *ngIf="selectedTab == 0 && !(_IsRead)">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

@@ -1,0 +1,171 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$"></kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_ruc maxlength="20" [(ngModel)]="model.ruc" name="modelruc" placeholder="ruc" />
+                                            <mat-hint align="end">{{ _ruc.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_name maxlength="100" [(ngModel)]="model.name" name="modelname" placeholder="razón social" />
+                                            <mat-hint align="end">{{ _name.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea matInput #_address maxlength="200" [(ngModel)]="model.address" name="modeladdress" placeholder="dirección" rows="3" cols="120"></textarea>
+                                            <mat-hint align="end">{{ _address.value.length }} / 200</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_email maxlength="100" [(ngModel)]="model.email" name="modelemail" placeholder="correo electrónico" [readonly]="_IsEdit" />
+                                            <mat-hint align="end">{{ _email.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_phone maxlength="100" [(ngModel)]="model.phone" name="modelphone" placeholder="teléfonos">
+                                            <mat-hint align="end">{{ _phone.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h6>Representante</h6>
+                                    </div>
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_firstname maxlength="50" [(ngModel)]="model.firstname" name="modelfirstname" placeholder="nombres" [readonly]="_IsEdit" />
+                                            <mat-hint align="end">{{ _firstname.value.length }} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_lastname maxlength="50" [(ngModel)]="model.lastname" name="modellastname" placeholder="apellidos" [readonly]="_IsEdit" />
+                                            <mat-hint align="end">{{ _lastname.value.length }} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea matInput #_description maxlength="1000" [(ngModel)]="model.description" name="modeldescription" placeholder="descripción" rows="8" cols="120"></textarea>
+                                            <mat-hint align="end">{{ _description.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Contactos
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_contactname maxlength="100" [(ngModel)]="contact.name" id="contactname" name="contactname" placeholder="Contacto" />
+                                                <mat-hint align="end">{{ _contactname.value.length }} / 100</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_contactemail maxlength="100" [(ngModel)]="contact.email" name="contactemail" placeholder="correo electronico" />
+                                                <mat-hint align="end">{{ _contactemail.value.length }} / 100</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_contactphone maxlength="50" [(ngModel)]="contact.phone" name="contactphone" placeholder="teléfono móvil" />
+                                                <mat-hint align="end">{{ _contactphone.value.length }} / 50</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <textarea matInput #_contactdescription maxlength="1000" [(ngModel)]="contact.description" name="contactdescription" placeholder="descripción" rows="6" cols="120"></textarea>
+                                                <mat-hint align="end">{{ _contactdescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                            <a (click)="setContactCreate()" class="btn btn-info font-weight-bolder font-size-sm cursor-pointer" *ngIf="!(_IsRead)">Crear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 35%">Nombre</th>
+                                            <th style="width: 50%">Correo electrónico</th>
+                                            <th style="width: 15%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(contact.list.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="3" style="height: 30px;">no existen contactos</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(contact.list.length > 0)">
+                                        <tr *ngFor="let dt of contact.list">
+                                            <td style="text-align: left;">{{ dt.name }}</td>
+                                            <td style="text-align: left;">{{ dt.email }}</td>
+                                            <td style="text-align: center;"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="getTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar y regresar a la lista">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

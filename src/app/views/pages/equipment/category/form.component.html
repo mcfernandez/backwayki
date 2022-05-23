@@ -1,0 +1,155 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar e ir a la lista de ocupaciones" *ngIf="!(_IsRead)">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_code maxlength="30" [(ngModel)]="code" name="code" placeholder="Código" [readonly]="_IsEdit" />
+                                            <mat-hint align="end">{{ _code.value.length }} / 30</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Tipo</mat-label>
+                                            <mat-select [(ngModel)]="typeid" name="typeid" [disabled]="_IsEdit">
+                                                <mat-option *ngFor="let item of listType" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_name maxlength="100" [(ngModel)]="name" name="name" placeholder="Nombres" />
+                                            <mat-hint align="end">{{ _name.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_description maxlength="1000" [(ngModel)]="description" name="description" placeholder="Descripción" />
+                                            <mat-hint align="end">{{ _description.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab *ngIf="_IsEdit">
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Items
+                </ng-template>
+                <ng-template matTabContent>
+                    <div class="row">
+                        <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                            <form class="form form-group-seperator-dashed">
+                                <div class="form-section form-section-first">
+                                    <div class="row">
+                                        <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_itemcode maxlength="30" [(ngModel)]="item.code" [readonly]="item.isEdit" name="itemcode" placeholder="Código" />
+                                                <mat-hint align="end">{{ _itemcode.value.length }} / 30</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_itemname maxlength="100" [(ngModel)]="item.name" name="itemname" placeholder="Nombre" />
+                                                <mat-hint align="end">{{ _itemname.value.length }} / 100</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput #_itemdescription maxlength="1000" [(ngModel)]="item.description" name="itemdescription" placeholder="Descripción" />
+                                                <mat-hint align="end">{{ _itemdescription.value.length }} / 1000</mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 kt-margin-bottom-20-mobile" style="text-align: right; margin-top: 10px;">
+                                            <a (click)="setItemCreate()" *ngIf="!(item.isEdit) && !(_IsRead)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer">Crear</a>
+                                            <a (click)="setItemUpdate()" *ngIf="item.isEdit && !(_IsRead)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer">Actualizar</a>
+                                            <a (click)="setItemClear()" *ngIf="item.isEdit && !(_IsRead)" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer">Cancelar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-7 kt-margin-bottom-20-mobile">
+                            <div style="width: 100%; height: 400px; overflow-x: hidden; overflow-y: auto;">
+                                <table class="table table-striped table-bordered table-full-width">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 25%">Código</th>
+                                            <th style="width: 60%">Nombre</th>
+                                            <th style="width: 15%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!(listItem.length > 0)">
+                                        <tr>
+                                            <td style="text-align: center;" colspan="3" style="height: 30px;">no existen items</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="(listItem.length > 0)">
+                                        <tr *ngFor="let dt of listItem">
+                                            <td style="text-align: left;">{{ dt.code }}</td>
+                                            <td style="text-align: left;">{{ dt.name }}</td>
+                                            <td style="text-align: center;">
+                                                <button mat-icon-button type="button" color="primary" matTooltip="Editar" (click)="setItemEdit(dt.id, dt.code, dt.name, dt.description)" *ngIf="!(_IsRead)">
+                                                    <mat-icon>create</mat-icon>
+                                                </button>
+                                                <button mat-icon-button type="button" color="primary" matTooltip="Borrar" (click)="setItemDelete(dt.id, dt.name)" *ngIf="!(_IsRead)">
+                                                    <mat-icon>delete_forever</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="getTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar e ir a la lista de ocupaciones" *ngIf="!(_IsRead)">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

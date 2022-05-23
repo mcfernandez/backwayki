@@ -1,0 +1,157 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar e ir a la lista de ocupaciones" *ngIf="!(_IsRead)">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_code maxlength="10" [(ngModel)]="code" name="code" placeholder="Código" [readonly]="_IsEdit" />
+                                            <mat-hint align="end">{{ _code.value.length }} / 10</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_ruc maxlength="20" [(ngModel)]="ruc" name="ruc" placeholder="RUC" />
+                                            <mat-hint align="end">{{ _ruc.value.length }} / 10</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Categoría</mat-label>
+                                            <mat-select [(ngModel)]="categoryid" name="categoryid">
+                                                <mat-option *ngFor="let item of listCategory" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_name maxlength="100" [(ngModel)]="name" name="name" placeholder="Nombres" />
+                                            <mat-hint align="end">{{ _name.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_city maxlength="100" [(ngModel)]="city" name="city" placeholder="Ciudad / Localidad" />
+                                            <mat-hint align="end">{{ _city.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_address maxlength="200" [(ngModel)]="address" name="address" placeholder="Dirección" />
+                                            <mat-hint align="end">{{ _address.value.length }} / 200</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_phone maxlength="50" [(ngModel)]="phone" name="phone" placeholder="Teléfonos" />
+                                            <mat-hint align="end">{{ _phone.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_grupallimit maxlength="3" [(ngModel)]="grupallimit" name="grupallimit" placeholder="Límite grupal" />
+                                            <mat-hint align="end">{{ _grupallimit.value.length }} / 3</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_accountbank maxlength="100" [(ngModel)]="accountbank" name="accountbank" placeholder="Cuenta bancaria" />
+                                            <mat-hint align="end">{{ _accountbank.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_email maxlength="100" [(ngModel)]="email" name="email" placeholder="Correo electrónico" />
+                                            <mat-hint align="end">{{ _email.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_url maxlength="100" [(ngModel)]="url" name="url" placeholder="URL" />
+                                            <mat-hint align="end">{{ _url.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_facebook maxlength="100" [(ngModel)]="facebook" name="facebook" placeholder="Facebook" />
+                                            <mat-hint align="end">{{ _facebook.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_twitter maxlength="100" [(ngModel)]="twitter" name="twitter" placeholder="Twitter" />
+                                            <mat-hint align="end">{{ _twitter.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_description maxlength="1000" [(ngModel)]="description" name="description" placeholder="Descripción" />
+                                            <mat-hint align="end">{{ _description.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="getTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar e ir a la lista de ocupaciones" *ngIf="!(_IsRead)">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

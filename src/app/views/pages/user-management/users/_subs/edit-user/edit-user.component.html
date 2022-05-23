@@ -1,0 +1,58 @@
+<div class="overflow-hidden">
+    <h2 class="mat-dialog-title example-h2 pt-5 pl-5">Actualización de Usuarios</h2>
+    <hr>
+    <section class="p-5">
+        <form class="form form-group-seperator-dashed">
+            <div class="form-section form-section-first">
+                <div class="form-group row">
+                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                        <mat-form-field class="example-full-width">
+                            <input matInput #_name maxlength="50" [(ngModel)]="name" name="name" placeholder="Nombres">
+                            <mat-hint align="end">{{_name.value.length}} / 50</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                        <mat-form-field class="example-full-width">
+                            <input matInput #_lastname maxlength="50" [(ngModel)]="lastname" name="lastname" placeholder="Apellido">
+                            <mat-hint align="end">{{_lastname.value.length}} / 50</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-4 kt-margin-bottom-20-mobile" *ngIf="false">
+                        <mat-form-field class="example-full-width">
+                            <input matInput #_phone maxlength="50" [(ngModel)]="phone" name="phone" placeholder="Telefono">
+                            <mat-hint align="end">{{_phone.value.length}} / 50</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                        <mat-form-field class="example-full-width">
+                            <input matInput #_mobile maxlength="50" [(ngModel)]="mobile" name="mobile" placeholder="Celular">
+                            <mat-hint align="end">{{_mobile.value.length}} / 50</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                        <mat-form-field class="example-full-width">
+                            <input matInput #_email maxlength="50" [(ngModel)]="email" name="email" placeholder="Correo Electrónico">
+                            <mat-hint align="end">{{_email.value.length}} / 50</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-12 text-center">
+                <a href="javascript:;" class="btn mr-2 btn-outline-danger" (click)="cancelar()" mat-raised-button>
+                    <span class="hidden-mobile">Cancelar</span>
+                </a>
+                <a href="javascript:;" class="btn mr-2 btn-outline-warning" (click)="guardar()" mat-raised-button>
+                    <span class="hidden-mobile">Actualizar</span>
+                </a>
+            </div>
+        </div>
+
+    </section>
+
+</div>

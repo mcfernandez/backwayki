@@ -1,0 +1,54 @@
+<kt-portlet>
+    <kt-portlet-header [title]="'Reservas'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            <a (click)="GetPagination()" class="btn btn-info font-weight-bolder font-size-sm mr-3 cursor-pointer">Búsqueda</a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="form kt-margin-b-30">
+            <div class="form-filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-3 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [matDatepicker]="_startdate" name="startdate" [(ngModel)]="startdate" placeholder="Fecha de inicio" />
+                            <mat-datepicker-toggle matSuffix [for]="_startdate"></mat-datepicker-toggle>
+                            <mat-datepicker #_startdate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3 kt-margin-bottom-10-mobile mr-10">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [matDatepicker]="_enddate" name="enddate" [(ngModel)]="enddate" placeholder="Fecha de finalización" />
+                            <mat-datepicker-toggle matSuffix [for]="_enddate"></mat-datepicker-toggle>
+                            <mat-datepicker #_enddate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mat-table__wrapper">
+            <mat-table class="lmat-elevation-z8" #table [dataSource]="dataSource" matSort #sort1="matSort" matSortActive="id" matSortDirection="asc" matSortDisableClear>
+                <ng-container matColumnDef="date">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de inicio</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination">{{ ConvertDate(listpagination.date) }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="code">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Código de reserva</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination">{{ listpagination.code }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Monto total (US$)</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination">{{ listpagination.amount.toFixed(2) }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="payment">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Pagos (US$)</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.payment.toFixed(2) }}</mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+        </div>
+        <div class="mat-table__bottom">
+            <mat-paginator [pageSize]="20" [pageSizeOptions]="[3, 5, 10]" [showFirstLastButtons]="true"></mat-paginator>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

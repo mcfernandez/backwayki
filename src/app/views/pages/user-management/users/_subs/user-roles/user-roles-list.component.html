@@ -1,0 +1,35 @@
+<div class="overflow-hidden">
+    <h2 class="mat-dialog-title example-h2 pt-5 pl-5">Actualización de Roles al usuario {{ name }} {{ lastname }}</h2>
+    <hr />
+    <section class="example-section pl-5">
+        <div class="row">
+            <div class="col-4" *ngFor="let rol of roles">
+                <div class="form-group row">
+                    <label class="col-lg-3 col-form-label text-lg-right">{{rol.name}}</label>
+                    <div class="col-lg-9 col-xl-4">
+                        <span class="switch switch-icon">
+                            <label>
+                                <input type="checkbox" name="{{rol.id}}" [(ngModel)]="rol.status" (change)="cambio_rol(rol.id,rol.status)" />
+                                <span></span>
+                        </label>
+                        </span>
+                        <div class="form-text text-muted">{{ rol.description }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr />
+    <section>
+        <div class="row m-5">
+            <div class="col-12 text-center">
+                <a href="javascript:;" class="btn mr-2 btn-outline-danger" (click)="cancelar()" mat-raised-button>
+                    <span class="hidden-mobile">Cancelar</span>
+                </a>
+                <a href="javascript:;" class="btn btn-outline-warning mr-2" (click)="guardar()" mat-raised-button>
+                    <span class="hidden-mobile">Actualizar</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>

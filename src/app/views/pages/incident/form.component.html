@@ -1,0 +1,102 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <a [routerLink]="[_pathurl]" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save(false)" mat-raised-button matTooltip="Guardar" *ngIf="_IsEdit">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save(true)" mat-raised-button matTooltip="Cerrar incidencia" *ngIf="_IsEdit">
+                <span class="hidden-mobile">Cerrar indicencia</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="name" name="name" placeholder="Nombre" readonly />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="typename" name="typename" placeholder="Tipo" readonly />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="statusname" name="statusname" placeholder="Estado" readonly />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="clientname" name="clientname" placeholder="Cliente" readonly />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="bookingname" name="bookingname" placeholder="Reserva" readonly />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [(ngModel)]="advisername" name="advisername" placeholder="Asesor de venta" readonly />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea matInput [(ngModel)]="description" name="description" placeholder="Descripcion" rows="10" cols="120" readonly></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea matInput #_response maxlength="1000" [(ngModel)]="response" name="response" placeholder="Respuesta" rows="10" cols="120"></textarea>
+                                            <mat-hint align="end">{{ _response.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea matInput #_observation maxlength="8000" [(ngModel)]="observation" name="observation" placeholder="Observacion" rows="10" cols="120"></textarea>
+                                            <mat-hint align="end">{{ _observation.value.length }} / 8000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="getTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="[_pathurl]" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save(false)" mat-raised-button matTooltip="Guardar" *ngIf="_IsEdit">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save(true)" mat-raised-button matTooltip="Cerrar incidencia" *ngIf="_IsEdit">
+                <span class="hidden-mobile">Cerrar indicencia</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

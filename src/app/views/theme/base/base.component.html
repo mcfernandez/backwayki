@@ -1,0 +1,27 @@
+<ng-container>
+    <div class="d-flex flex-column flex-root">
+        <div class="d-flex flex-row flex-column-fluid page">
+            <!-- Menu -->
+            <ng-container *ngIf="asideSelfDisplay">
+                <kt-aside-left></kt-aside-left>
+            </ng-container>
+            <!--Content-->
+            <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+                <!-- Header -->
+                <kt-header></kt-header>
+                <!-- moduls -->
+                <div class="content d-flex flex-column flex-column-fluid" id="kt_content" [ngClass]="contentClasses">
+                    <div ktContentAnimate class="d-flex flex-column-fluid">
+                        <div [ngClass]="contentContainerClasses">
+                            <router-outlet></router-outlet>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <kt-quick-panel></kt-quick-panel>
+        <kt-quick-user-panel></kt-quick-user-panel>
+        <kt-scroll-top></kt-scroll-top>
+        <!-- <kt-sticky-toolbar></kt-sticky-toolbar> -->
+    </div>
+</ng-container>

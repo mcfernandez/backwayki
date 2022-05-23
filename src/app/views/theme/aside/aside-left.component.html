@@ -1,0 +1,39 @@
+<div #asideMenuOffcanvas class="aside aside-left d-flex flex-column flex-row-auto" [ngClass]="asideClasses" id="kt_aside">
+    <!-- logo menu -->
+    <kt-brand></kt-brand>
+
+    <!--  Menu -->
+    <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
+        <div #asideMenu ktMenu [options]="menuOptions" [perfectScrollbar]="{wheelPropagation: false, suppressScrollX: false}" [ngStyle]="{'max-height': '100vh', 'position': 'relative'}" id="kt_aside_menu" class="aside-menu scroll" (mouseenter)="mouseEnter($event)"
+            (mouseleave)="mouseLeave($event)" [ngClass]="htmlClassService.getClasses('aside_menu', true)">
+            <ul class="menu-nav" [ngClass]="htmlClassService.getClasses('aside_menu_nav', true)"  >
+                <!--<ng-container [ngTemplateOutlet]="menuListTemplate"></ng-container>-->
+                <!-- <ul class="menu-nav" [ngClass]="ulCSSClasses"> -->
+                <li class="menu-item" [ngClass]="htmlClassService.getClasses('menu-item-submen', module.subitems != null)" aria-haspopup="true"   *ngFor="let module of menus">
+                    <a class="menu-link" routerLink="{{module.url}}" routerLinkActive="active" *ngIf="module.subitems == null" [hidden]="!module.status">
+                        <span class="svg-icon menu-icon"><i class="fas fa-user"></i></span>
+                        <span class="menu-text">{{module.title}}</span>
+                    </a>
+                    <a class="menu-link menu-toggle" routerLinkActive="active" href="{{module.url}}" *ngIf="module.subitems != null" [hidden]="!module.status">
+                        <span class="svg-icon menu-icon"><i class="fas fa-user"></i></span>
+                        <span class="menu-text">{{module.title}}</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="menu-submenu" *ngIf="module.subitems != null">
+                        <i class="menu-arrow"></i>
+                        <ul class="menu-subnav">
+                            <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover" *ngFor="let subitem of module.subitems">
+                                <a class="menu-link" routerLink="{{subitem.url}}" routerLinkActive="active" [hidden]="!subitem.status">
+                                    <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                    <span class="menu-text">{{subitem.title}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+            <!-- </ul> -->
+        </div>
+    </div>
+</div>

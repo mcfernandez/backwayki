@@ -1,0 +1,219 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <a [routerLink]="[_pathurl]" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Personal
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_firstname maxlength="50" [(ngModel)]="model.firstname" name="firstname" placeholder="Nombres" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _firstname.value.length }} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_lastname maxlength="50" [(ngModel)]="model.lastname" name="lastname" placeholder="Apellidos" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _lastname.value.length }} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile" style="text-align: right;" *ngIf="urlFile != ''">
+                                        <a (click)="openFile()" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Ver Documento">
+                                            <i class="la la-arrow-left"></i>
+                                            <span class="hidden-mobile">Ver Documento</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-10 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_email maxlength="100" [(ngModel)]="model.email" name="email" placeholder="Correo electrónico" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _email.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-5 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Documento de identificación</mat-label>
+                                            <mat-select [(ngModel)]="model.documenttypeid" name="documenttypeid" [disabled]="_IsShow">
+                                                <mat-option *ngFor="let item of listDocumentType" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_documentnumber maxlength="20" [(ngModel)]="model.documentnumber" name="documentnumber" placeholder="Número de identificación" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _documentnumber.value.length }} / 20</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [matDatepicker]="birthdate" [(ngModel)]="model.birthdate" name="birthdate" placeholder="Fecha de nacimiento" [readonly]="_IsShow" />
+                                            <mat-datepicker-toggle matSuffix [for]="birthdate"></mat-datepicker-toggle>
+                                            <mat-datepicker #birthdate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Sexo</mat-label>
+                                            <mat-select [(ngModel)]="model.sexid" name="sexid" [disabled]="_IsShow">
+                                                <mat-option *ngFor="let item of listSex" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Estado civil</mat-label>
+                                            <mat-select [(ngModel)]="model.maritalstatusid" name="maritalstatusid" [disabled]="_IsShow">
+                                                <mat-option *ngFor="let item of listMaritalStatus" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_mobilenumber maxlength="30" [(ngModel)]="model.mobilenumber" name="mobilenumber" placeholder="Teléfono móvil" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _mobilenumber.value.length }} / 30</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>País</mat-label>
+                                            <mat-select [(ngModel)]="model.countryid" name="countryid" [disabled]="_IsShow">
+                                                <mat-option *ngFor="let item of listCountry" [value]="item.id" [disabled]="!(item.status)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Ocupación</mat-label>
+                                            <mat-select [(ngModel)]="model.jobid" name="jobid" [disabled]="_IsShow">
+                                                <mat-option *ngFor="let item of listJob" [value]="item.id" [disabled]="!(item.status)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_description maxlength="1000" [(ngModel)]="model.description" name="description" placeholder="Descripción" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _description.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Preferencias de alimentación</mat-label>
+                                            <mat-select [(ngModel)]="model.foodpreferencesid" name="foodpreferencesid" [disabled]="_IsShow">
+                                                <mat-option *ngFor="let item of listFoodPreferences" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_foodobservation maxlength="1000" [(ngModel)]="model.foodobservation" name="foodobservation" placeholder="Observación de alimentación" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _foodobservation.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_allergyobservation maxlength="1000" [(ngModel)]="model.allergyobservation" name="allergyobservation" placeholder="Observación de alergias" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _allergyobservation.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_medicalrequirement maxlength="1000" [(ngModel)]="model.medicalrequirement" name="medicalrequirement" placeholder="Requerimientos médicos" [readonly]="_IsShow">
+                                            <mat-hint align="end">{{ _medicalrequirement.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Proposito del viaje</mat-label>
+                                            <mat-select [(ngModel)]="model.travelpurposeid" name="travelpurposeid" [disabled]="_IsShow">
+                                                <mat-option *ngFor="let item of listTravelPurpose" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Experiencia en caminatas</mat-label>
+                                            <mat-select [(ngModel)]="model.trekkingexperienceid" name="trekkingexperienceid" [disabled]="_IsShow">
+                                                <mat-option *ngFor="let item of listTrekkingExperience" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="getTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="[_pathurl]" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

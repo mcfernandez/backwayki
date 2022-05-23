@@ -1,0 +1,170 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar e ir a la lista de ocupaciones" *ngIf="!(_IsRead)">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_code maxlength="30" [(ngModel)]="code" name="code" placeholder="Código" [readonly]="_IsEdit" />
+                                            <mat-hint align="end">{{ _code.value.length }} / 30</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_name maxlength="100" [(ngModel)]="name" name="name" placeholder="Nombres" />
+                                            <mat-hint align="end">{{ _name.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 kt-margin-bottom-10-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput [matDatepicker]="_acquisitiondate" name="acquisitiondate" [(ngModel)]="acquisitiondate" placeholder="Fecha de adquisicion" />
+                                            <mat-datepicker-toggle matSuffix [for]="_acquisitiondate"></mat-datepicker-toggle>
+                                            <mat-datepicker #_acquisitiondate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Categoría</mat-label>
+                                            <mat-select [(ngModel)]="categoryid" name="categoryid" [disabled]="_IsEdit" (selectionChange)="onChangeCategory($event)">
+                                                <mat-option *ngFor="let item of listCategory" [value]="item.id" [disabled]="!(item.status)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Sub Categoría</mat-label>
+                                            <mat-select [(ngModel)]="subcategoryid" name="subcategoryid" [disabled]="_IsEdit">
+                                                <mat-option *ngFor="let item of listSubCategory" [value]="item.id">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Marca</mat-label>
+                                            <mat-select [(ngModel)]="brandid" name="brandid">
+                                                <mat-option *ngFor="let item of listBrand" [value]="item.id" [disabled]="!(item.status)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_model maxlength="100" [(ngModel)]="model" name="model" placeholder="Modelo" />
+                                            <mat-hint align="end">{{ _model.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_material maxlength="100" [(ngModel)]="material" name="material" placeholder="Material" />
+                                            <mat-hint align="end">{{ _material.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_color maxlength="100" [(ngModel)]="color" name="color" placeholder="Color" />
+                                            <mat-hint align="end">{{ _color.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_serie maxlength="100" [(ngModel)]="serie" name="serie" placeholder="Serie" />
+                                            <mat-hint align="end">{{ _serie.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_capacidad maxlength="100" [(ngModel)]="capacidad" name="capacidad" placeholder="Capacidad" />
+                                            <mat-hint align="end">{{ _capacidad.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_fccid maxlength="100" [(ngModel)]="fccid" name="fccid" placeholder="FCCID" />
+                                            <mat-hint align="end">{{ _fccid.value.length }} / 100</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Estado de la condicion</mat-label>
+                                            <mat-select [(ngModel)]="conditionid" name="conditionid">
+                                                <mat-option *ngFor="let item of listCondition" [value]="item.id" [disabled]="!(item.isactive)">
+                                                    {{ item.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_description maxlength="1000" [(ngModel)]="description" name="description" placeholder="Descripción" />
+                                            <mat-hint align="end">{{ _description.value.length }} / 1000</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+    <kt-portlet-footer [title]="getTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="_pathurl" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Regresar">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Regresar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="save()" mat-raised-button matTooltip="Guardar e ir a la lista de ocupaciones" *ngIf="!(_IsRead)">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>

@@ -1,0 +1,54 @@
+<kt-portlet>
+    <kt-portlet-header [title]="'Notificaciones'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="mat-table__wrapper">
+            <mat-table class="lmat-elevation-z8" #table [dataSource]="dataSource" matSort #sort1="matSort" matSortActive="bookingname" matSortDirection="desc" matSortDisableClear>
+                <ng-container matColumnDef="bookingname">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Reserva</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.bookingname }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="tourname">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Tour</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.tourname }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="arename">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Área</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.arename }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="authorname">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Autor</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.authorname }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="observation">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Observación</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.observation }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="date">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.date | date:'dd/MM/yyyy' }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="reasonname">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination"> {{ listpagination.reasonname }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+                    <mat-cell *matCellDef="let listpagination">
+                        <button mat-icon-button type="button" color="primary" matTooltip="Revisar" (click)="setEdit(listpagination.id)">
+                            <mat-icon>create</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+        </div>
+        <div class="mat-table__bottom">
+            <mat-paginator [pageSize]="20" [pageSizeOptions]="[3, 5, 10, 20]" [showFirstLastButtons]="true"></mat-paginator>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

@@ -1,0 +1,31 @@
+<div class="overflow-hidden">
+    <h2 class="mat-dialog-title example-h2 pt-5 pl-5">Cambiar fecha de inicio</h2>
+    <hr />
+    <section class="p-5">
+        <form class="form form-group-seperator-dashed">
+            <div class="form-section form-section-first">
+                <div class="row">
+                    <div class="col-lg-8 kt-margin-bottom-20-mobile">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [matDatepicker]="startdatex" name="startdate" [(ngModel)]="startdate" placeholder="Fecha de inicio" />
+                            <mat-datepicker-toggle matSuffix [for]="startdatex"></mat-datepicker-toggle>
+                            <mat-datepicker #startdatex></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-12 text-center">
+                <a href="javascript:;" class="btn mr-2 btn-outline-danger" (click)="cerrar()" mat-raised-button>
+                    <span class="hidden-mobile">Cancelar</span>
+                </a>
+                <a href="javascript:;" class="btn mr-2 btn-outline-warning" (click)="guardar()" mat-raised-button>
+                    <span class="hidden-mobile">Actualizar</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>

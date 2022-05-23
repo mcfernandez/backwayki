@@ -1,0 +1,107 @@
+<kt-portlet>
+    <kt-portlet-header [title]="getComponentTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <a [routerLink]="['../../']" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Back to the users list">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Cancelar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-secondary mr-2" (click)="reset()" [disabled]="selectedTab !== 0" mat-raised-button matTooltip="Reset changes">
+                <i class="la la-cog"></i>
+                <span class="hidden-mobile">Borrar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="onSumbit(false)" mat-raised-button matTooltip="Save & Continue">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="mat-tab-label-icon fa fa-user"></i> Información
+                </ng-template>
+                <ng-template matTabContent>
+                    <div>
+                        <form class="form form-group-seperator-dashed">
+                            <div class="form-section form-section-first">
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_name maxlength="50" [(ngModel)]="name" name="name" placeholder="Nombres">
+                                            <mat-hint align="end">{{_name.value.length}} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_lastname maxlength="50" [(ngModel)]="lastname" name="lastname" placeholder="Apellidos">
+                                            <mat-hint align="end">{{_lastname.value.length}} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Seleccionar Rol de Usuario" [(ngModel)]="rolUSer" name="rolUSer">
+                                                <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                                                    {{ rol.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_mobile maxlength="50" [(ngModel)]="mobile" name="mobile" placeholder="Celular">
+                                            <mat-hint align="end">{{_mobile.value.length}} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_email maxlength="50" [(ngModel)]="email" name="email" placeholder="Correo Electrónico">
+                                            <mat-hint align="end">{{_email.value.length}} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_nickname maxlength="50" [(ngModel)]="nickname" name="nickname" placeholder="Usuario">
+                                            <mat-hint align="end">{{_nickname.value.length}} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_password maxlength="50" [(ngModel)]="password" name="password" placeholder="Contraseña">
+                                            <mat-hint align="end">{{_password.value.length}} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput #_password2 maxlength="50" [(ngModel)]="password2" name="password2" placeholder="Verificar Contraseña">
+                                            <mat-hint align="end">{{_password2.value.length}} / 50</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </kt-portlet-body>
+
+    <kt-portlet-footer [title]="getComponentTitle()" class="text-right">
+        <ng-container ktPortletTools>
+            <a [routerLink]="['../../']" class="btn btn-secondary mr-2" mat-raised-button matTooltip="Back to the users list">
+                <i class="la la-arrow-left"></i>
+                <span class="hidden-mobile">Cancelar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-secondary mr-2" (click)="reset()" [disabled]="selectedTab !== 0" mat-raised-button matTooltip="Reset changes">
+                <i class="la la-cog"></i>
+                <span class="hidden-mobile">Borrar</span>
+            </a>
+            <a href="javascript:;" class="btn btn-primary mr-2" color="primary" (click)="onSumbit(false)" mat-raised-button matTooltip="Save & Continue">
+                <span class="hidden-mobile">Guardar</span>
+            </a>
+        </ng-container>
+    </kt-portlet-footer>
+</kt-portlet>
